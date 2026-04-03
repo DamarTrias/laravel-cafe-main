@@ -14,28 +14,34 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         // Create an Owner
-        User::create([
-            'name' => 'Cafe Owner',
-            'email' => 'owner@cafe.com',
-            'password' => Hash::make('password'),
-            'role' => 'owner'
-        ]);
+        User::updateOrCreate(
+            ['email' => 'owner@cafe.com'],
+            [
+                'name' => 'Cafe Owner',
+                'password' => Hash::make('password'),
+                'role' => 'owner'
+            ]
+        );
 
         // Create an Admin/Kasir
-        User::create([
-            'name' => 'Cafe Admin',
-            'email' => 'admin@cafe.com',
-            'password' => Hash::make('password'),
-            'role' => 'admin'
-        ]);
+        User::updateOrCreate(
+            ['email' => 'admin@cafe.com'],
+            [
+                'name' => 'Cafe Admin',
+                'password' => Hash::make('password'),
+                'role' => 'admin'
+            ]
+        );
 
         // Create a Pelanggan
-        User::create([
-            'name' => 'Customer',
-            'email' => 'customer@cafe.com',
-            'password' => Hash::make('password'),
-            'role' => 'pelanggan'
-        ]);
+        User::updateOrCreate(
+            ['email' => 'customer@cafe.com'],
+            [
+                'name' => 'Customer',
+                'password' => Hash::make('password'),
+                'role' => 'pelanggan'
+            ]
+        );
         
         // Seed 5 random customers
         User::factory(5)->create(['role' => 'pelanggan']);

@@ -170,7 +170,14 @@ class ProductSeeder extends Seeder
         ];
 
         foreach ($products as $product) {
-            Product::create($product);
+            Product::updateOrCreate(
+                ['name' => $product['name'], 'category_id' => $product['category_id']],
+                [
+                    'description' => $product['description'],
+                    'price' => $product['price'],
+                    'stock' => $product['stock'],
+                ]
+            );
         }
     }
 }
