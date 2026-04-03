@@ -230,7 +230,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark navbar-glass sticky-top">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="bi bi-cup-hot-fill me-2"></i>14 CAFE
+                <i class="bi bi-cup-hot-fill me-2"></i>69 CAFE
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-toggle="collapse"
                 data-bs-target="#navbarNav">
