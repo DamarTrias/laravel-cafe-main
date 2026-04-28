@@ -222,6 +222,13 @@
             margin-bottom: 6px;
             display: block;
         }
+
+        /* Password Reveal Icon (Browser-native) */
+        input::-ms-reveal,
+        input::-webkit-contacts-auto-fill-button,
+        input::-webkit-credentials-auto-fill-button {
+            filter: invert(100%);
+        }
     </style>
 </head>
 
@@ -253,6 +260,14 @@
                                     href="{{ route('owner.products.index') }}">Produk</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('owner.recipes.*') ? 'active' : '' }}"
+                                    href="{{ route('owner.recipes.index') }}">Resep Menu</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('owner.ingredients.*') ? 'active' : '' }}"
+                                    href="{{ route('owner.ingredients.index') }}">Bahan (Stok)</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('owner.reports.*') ? 'active' : '' }}"
                                     href="{{ route('owner.reports.index') }}">Laporan</a>
                             </li>
@@ -260,6 +275,14 @@
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"
                                     href="{{ route('admin.dashboard') }}">Pesanan Masuk</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('admin.recipes.*') ? 'active' : '' }}"
+                                    href="{{ route('admin.recipes.index') }}">Resep Menu</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('admin.ingredients.*') ? 'active' : '' }}"
+                                    href="{{ route('admin.ingredients.index') }}">Bahan (Stok)</a>
                             </li>
                         @else
                             <li class="nav-item">

@@ -62,8 +62,10 @@ class DashboardController extends Controller
             $current->addDay();
         }
 
-        // Low Stock Products Alert
-        $lowStockProducts = Product::where('stock', '<', 10)->get();
+        // Low Stock Ingredients Alert
+        $lowStockIngredients = \App\Models\Ingredient::where('warehouse_stock', '<', 5)
+                            ->orWhere('operational_stock', '<', 2)
+                            ->get();
 
         return view('owner.dashboard', compact(
             'productCount', 
@@ -75,7 +77,7 @@ class DashboardController extends Controller
             'endDate',
             'labels',
             'revenue',
-            'lowStockProducts'
+            'lowStockIngredients'
         ));
     }
 }

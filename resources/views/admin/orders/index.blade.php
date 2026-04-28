@@ -10,6 +10,31 @@
     </div>
 </div>
 
+@if($lowStockIngredients->count() > 0)
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="glass-card border-0 shadow-sm p-4" style="background: rgba(220, 53, 69, 0.1); border: 1px solid rgba(220, 53, 69, 0.2) !important;">
+            <div class="d-flex align-items-center mb-3 text-danger">
+                <i class="bi bi-exclamation-triangle-fill fs-4 me-2"></i>
+                <h5 class="mb-0 fw-bold text-white">Peringatan: Stok Operasional Menipis!</h5>
+            </div>
+            <p class="text-white text-opacity-75 small mb-3">Beberapa bahan di bawah ini sudah menipis di area operasional. Silakan ambil dari gudang owner sekarang.</p>
+            <div class="d-flex flex-wrap gap-2">
+                @foreach($lowStockIngredients as $ing)
+                    <div class="badge bg-dark bg-opacity-50 border border-danger border-opacity-50 p-2 d-flex align-items-center rounded-pill">
+                        <span class="text-white me-2">{{ $ing->name }}</span>
+                        <span class="badge bg-danger text-white">{{ number_format($ing->operational_stock, 2) }} {{ $ing->unit }}</span>
+                        <a href="{{ route('admin.ingredients.index') }}" class="ms-2 text-primary" title="Transfer Sekarang">
+                             <i class="bi bi-arrow-right-circle-fill"></i>
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
 <div class="glass-card card border-0">
     <div class="card-body p-0">
         <div class="table-responsive">

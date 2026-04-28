@@ -49,14 +49,15 @@
                         <th class="py-3">Produk</th>
                         <th class="py-3">Kategori</th>
                         <th class="py-3">Harga</th>
-                        <th class="py-3 text-center">Stok</th>
+                        <th class="py-3 text-center">Tersedia (Porsi)</th>
                         <th class="py-3">Status</th>
                         <th class="text-end pe-4 py-3">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($products as $product)
-                        <tr class="border-light border-opacity-10 {{ $product->stock < 10 ? 'bg-warning bg-opacity-10' : '' }}">
+                        @php $maxQty = $product->max_quantity; @endphp
+                        <tr class="border-light border-opacity-10 {{ $maxQty < 5 ? 'bg-warning bg-opacity-10' : '' }}">
                             <td class="ps-4">{{ $loop->iteration }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
@@ -78,12 +79,12 @@
                             <td><span class="badge bg-dark bg-opacity-50 text-white border border-light border-opacity-25 fw-normal">{{ $product->category->name }}</span></td>
                             <td class="fw-bold">Rp {{ number_format($product->price, 0, ',', '.') }}</td>
                             <td class="text-center">
-                                <span class="badge {{ $product->stock > 10 ? 'bg-success' : ($product->stock > 0 ? 'bg-warning' : 'bg-danger') }} bg-opacity-75">
-                                    {{ $product->stock }}
+                                <span class="badge {{ $maxQty > 10 ? 'bg-success' : ($maxQty > 0 ? 'bg-warning' : 'bg-danger') }} bg-opacity-75">
+                                    {{ $maxQty }} porsi
                                 </span>
                             </td>
                             <td>
-                                @if($product->is_available)
+                                @if($product->is_actually_available)
                                     <span class="badge bg-primary bg-opacity-25 text-primary border border-primary border-opacity-25">Tersedia</span>
                                 @else
                                     <span class="badge bg-secondary bg-opacity-25 text-muted border border-secondary border-opacity-25">Habis</span>

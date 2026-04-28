@@ -68,9 +68,9 @@ class OrderController extends Controller
 
             foreach ($cart as $id => $item) {
                 // Final stock check
-                $product = \App\Models\Product::find($id);
-                if (!$product || $product->stock < $item['quantity']) {
-                    throw new \Exception("Stok {$item['name']} tidak mencukupi.");
+                $product = \App\Models\Product::with('ingredients')->find($id);
+                if (!$product || $product->max_quantity < $item['quantity']) {
+                    throw new \Exception("Stok bahan untuk {$item['name']} tidak mencukupi.");
                 }
 
                 OrderItem::create([
@@ -80,8 +80,10 @@ class OrderController extends Controller
                     'price' => $item['price'],
                 ]);
 
-                // Reduce stock
-                $product->decrement('stock', $item['quantity']);
+                // Reduce ingredient operational stock
+                foreach ($product->ingredients as $ingredient) {
+                    $ingredient->decrement('operational_stock', $ingredient->pivot->amount_needed * $item['quantity']);
+                }
             }
 
             session()->forget('cart');

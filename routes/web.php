@@ -30,10 +30,13 @@ Route::middleware(['auth', 'role:owner'])->prefix('owner')->name('owner.')->grou
 
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
+    Route::resource('ingredients', \App\Http\Controllers\Owner\IngredientController::class);
+    Route::post('/ingredients/{ingredient}/transfer', [\App\Http\Controllers\Owner\IngredientController::class, 'transfer'])->name('ingredients.transfer');
 
     // Reports
     Route::get('/reports', [\App\Http\Controllers\Owner\ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/export', [\App\Http\Controllers\Owner\ReportController::class, 'exportCsv'])->name('reports.export');
+    Route::get('/recipes', [\App\Http\Controllers\Admin\RecipeController::class, 'index'])->name('recipes.index');
 });
 
 // ADMIN ROUTES
@@ -41,6 +44,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard', [AdminOrderController::class, 'index'])->name('dashboard');
     Route::get('/orders/{order}/print', [AdminOrderController::class, 'print'])->name('orders.print');
     Route::resource('orders', AdminOrderController::class)->only(['index', 'update', 'show']);
+    Route::resource('ingredients', \App\Http\Controllers\Owner\IngredientController::class);
+    Route::post('/ingredients/{ingredient}/transfer', [\App\Http\Controllers\Owner\IngredientController::class, 'transfer'])->name('ingredients.transfer');
+    Route::get('/recipes', [\App\Http\Controllers\Admin\RecipeController::class, 'index'])->name('recipes.index');
 });
 
 // PELANGGAN ROUTES

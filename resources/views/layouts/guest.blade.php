@@ -20,10 +20,10 @@
         <style>
             body {
                 font-family: 'Outfit', sans-serif;
-                background-color: #1a1a2e;
+                background-color: #0f0f11;
                 background-image:
-                    radial-gradient(circle at 15% 50%, rgba(212, 163, 115, 0.07), transparent 30%),
-                    radial-gradient(circle at 85% 30%, rgba(250, 237, 205, 0.04), transparent 30%);
+                    radial-gradient(circle at 15% 50%, rgba(212, 163, 115, 0.08), transparent 25%),
+                    radial-gradient(circle at 85% 30%, rgba(250, 237, 205, 0.05), transparent 25%);
                 min-height: 100vh;
             }
 
@@ -48,9 +48,20 @@
             input:-webkit-autofill:hover,
             input:-webkit-autofill:focus,
             input:-webkit-autofill:active {
-                -webkit-box-shadow: 0 0 0px 1000px rgba(30, 30, 50, 0.95) inset !important;
+                -webkit-box-shadow: 0 0 0px 1000px rgba(15, 15, 17, 0.95) inset !important;
                 -webkit-text-fill-color: white !important;
                 transition: background-color 5000s ease-in-out 0s;
+            }
+
+            /* Password Reveal Icon (Edge) */
+            input::-ms-reveal {
+                filter: invert(100%);
+            }
+
+            /* Password Reveal Icon (Webkit/Chrome) - if applicable, though usually not default */
+            input::-webkit-contacts-auto-fill-button,
+            input::-webkit-credentials-auto-fill-button {
+                filter: invert(100%);
             }
         </style>
     </head>

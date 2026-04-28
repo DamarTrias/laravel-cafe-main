@@ -22,9 +22,10 @@ class CartController extends Controller
     {
         $cart = session()->get('cart', []);
         $currentQty = isset($cart[$product->id]) ? $cart[$product->id]['quantity'] : 0;
+        $maxQty = $product->max_quantity;
 
-        if ($currentQty + 1 > $product->stock) {
-            return redirect()->back()->with('error', "Stok tidak mencukupi. Sisa stok: {$product->stock}");
+        if ($currentQty + 1 > $maxQty) {
+            return redirect()->back()->with('error', "Stok bahan tidak mencukupi untuk pesanan ini harian ini.");
         }
 
         if (isset($cart[$product->id])) {

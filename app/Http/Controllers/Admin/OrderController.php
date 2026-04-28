@@ -11,7 +11,8 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::with('user')->latest()->get();
-        return view('admin.orders.index', compact('orders'));
+        $lowStockIngredients = \App\Models\Ingredient::where('operational_stock', '<', 5)->orderBy('operational_stock')->get();
+        return view('admin.orders.index', compact('orders', 'lowStockIngredients'));
     }
 
     public function show(Order $order)

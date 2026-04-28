@@ -36,15 +36,72 @@
                         </select>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-6">
+                    <div class="row mb-4">
+                        <div class="col-md-12">
                             <label for="price" class="form-label text-white">Harga (Rp)</label>
                             <input type="number" class="form-control text-white" id="price" name="price" required value="{{ old('price', $product->price) }}">
                         </div>
-                        <div class="col-md-6">
-                            <label for="stock" class="form-label text-white">Stok</label>
-                            <input type="number" class="form-control text-white" id="stock" name="stock" required value="{{ old('stock', $product->stock) }}">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label text-white d-flex justify-content-between">
+                            Resep / Bahan Baku 
+                            <small class="text-muted">Tentukan bahan yang digunakan per 1 porsi</small>
+                        </label>
+                        <div id="ingredients-container">
+                            @foreach($product->ingredients as $index => $pivot)
+                                <div class="row mb-2 ingredient-row align-items-center">
+                                    <div class="col-7">
+                                        <select name="ingredients[]" class="form-select bg-dark text-white border-secondary">
+                                            <option value="">Pilih Bahan...</option>
+                                            @foreach($ingredients as $ing)
+                                                <option value="{{ $ing->id }}" data-unit="{{ $ing->unit }}" {{ $pivot->id == $ing->id ? 'selected' : '' }}>
+                                                    {{ $ing->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="input-group">
+                                            <input type="number" step="0.01" name="amounts[]" class="form-control bg-dark text-white border-secondary" placeholder="0" value="{{ $pivot->pivot->amount_needed }}">
+                                            <span class="input-group-text bg-dark text-muted border-secondary ingredient-unit">{{ $pivot->unit }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="button" class="btn btn-outline-danger btn-sm w-100 remove-ingredient">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            @endforeach
+                            
+                            @if($product->ingredients->isEmpty())
+                                <div class="row mb-2 ingredient-row align-items-center">
+                                    <div class="col-7">
+                                        <select name="ingredients[]" class="form-select bg-dark text-white border-secondary">
+                                            <option value="">Pilih Bahan...</option>
+                                            @foreach($ingredients as $ing)
+                                                <option value="{{ $ing->id }}" data-unit="{{ $ing->unit }}">{{ $ing->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="input-group">
+                                            <input type="number" step="0.01" name="amounts[]" class="form-control bg-dark text-white border-secondary" placeholder="0">
+                                            <span class="input-group-text bg-dark text-muted border-secondary ingredient-unit">-</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="button" class="btn btn-outline-danger btn-sm w-100 remove-ingredient">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
+                        <button type="button" id="add-ingredient" class="btn btn-outline-success btn-sm mt-2">
+                            <i class="bi bi-plus-circle me-1"></i> Tambah Bahan Baku
+                        </button>
                     </div>
 
                     <div class="mb-3">
@@ -79,4 +136,71 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    const container = document.getElementById('ingredients-container');
+    const addButton = document.getElementById('add-ingredient');
+
+    function updateUnit(select) {
+        const row = select.closest('.ingredient-row');
+        const unitSpan = row.querySelector('.ingredient-unit');
+        const selectedOption = select.options[select.selectedIndex];
+        const unit = selectedOption.getAttribute('data-unit') || '-';
+        unitSpan.textContent = unit;
+    }
+
+    // Listen for changes on selects
+    container.addEventListener('change', (e) => {
+        if (e.target.tagName === 'SELECT' && e.target.name === 'ingredients[]') {
+            updateUnit(e.target);
+        }
+    });
+
+    if (addButton && container) {
+        addButton.addEventListener('click', () => {
+            const row = document.createElement('div');
+            row.className = 'row mb-2 ingredient-row align-items-center';
+            row.innerHTML = `
+                <div class="col-7">
+                    <select name="ingredients[]" class="form-select bg-dark text-white border-secondary">
+                        <option value="">Pilih Bahan...</option>
+                        @foreach($ingredients as $ing)
+                            <option value="{{ $ing->id }}" data-unit="{{ $ing->unit }}">{{ $ing->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-3">
+                    <div class="input-group">
+                        <input type="number" step="0.01" name="amounts[]" class="form-control bg-dark text-white border-secondary" placeholder="0">
+                        <span class="input-group-text bg-dark text-muted border-secondary ingredient-unit">-</span>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <button type="button" class="btn btn-outline-danger btn-sm w-100 remove-ingredient">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            `;
+            container.appendChild(row);
+            attachRemoveEvent(row.querySelector('.remove-ingredient'));
+        });
+    }
+
+    function attachRemoveEvent(button) {
+        if (!button) return;
+        button.addEventListener('click', (e) => {
+            const rows = document.querySelectorAll('.ingredient-row');
+            if (rows.length > 1) {
+                const elementToRemove = e.target.closest('.ingredient-row');
+                if (elementToRemove) elementToRemove.remove();
+            } else {
+                alert('Minimal satu baris bahan baku.');
+            }
+        });
+    }
+
+    document.querySelectorAll('.remove-ingredient').forEach(attachRemoveEvent);
+</script>
+@endpush
 @endsection

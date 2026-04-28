@@ -53,13 +53,15 @@
                     </div>
                 @endif
                 
-                @if($product->stock < 5 && $product->stock > 0)
+                @php $maxQty = $product->max_quantity; @endphp
+                
+                @if($maxQty < 5 && $maxQty > 0)
                     <div class="position-absolute top-0 end-0 m-2">
-                        <span class="badge bg-danger shadow-sm bg-opacity-75 backdrop-blur">Sisa {{ $product->stock }}</span>
+                        <span class="badge bg-danger shadow-sm bg-opacity-75 backdrop-blur">Sisa {{ $maxQty }} porsi</span>
                     </div>
                 @endif
 
-                @if(!$product->is_available || $product->stock == 0)
+                @if(!$product->is_actually_available)
                     <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex align-items-center justify-content-center backdrop-blur">
                         <span class="badge bg-secondary px-3 py-2 fs-6">Habis</span>
                     </div>
@@ -73,7 +75,7 @@
                 <div class="mt-auto">
                     <div class="fs-5 fw-bold text-white mb-3">Rp {{ number_format($product->price, 0, ',', '.') }}</div>
                     
-                    @if($product->is_available && $product->stock > 0)
+                    @if($product->is_actually_available)
                     <form action="{{ route('pelanggan.cart.add', $product) }}" method="POST">
                         @csrf
                         <button type="submit" class="btn btn-primary w-100 py-2 rounded-pill shadow-sm fw-bold">

@@ -29,7 +29,8 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('owner.products.create', compact('categories'));
+        $ingredients = \App\Models\Ingredient::all();
+        return view('owner.products.create', compact('categories', 'ingredients'));
     }
 
     public function store(Request $request)
@@ -39,9 +40,12 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
             'is_available' => 'boolean',
-            'image' => 'nullable|image|max:2048'
+            'image' => 'nullable|image|max:2048',
+            'ingredients' => 'nullable|array',
+            'ingredients.*' => 'nullable|exists:ingredients,id',
+            'amounts' => 'nullable|array',
+            'amounts.*' => 'nullable|numeric|min:0.01'
         ]);
 
         if ($request->hasFile('image')) {
@@ -50,14 +54,27 @@ class ProductController extends Controller
 
         $validated['is_available'] = $request->has('is_available');
 
-        Product::create($validated);
+        $product = Product::create($validated);
+
+        if ($request->has('ingredients')) {
+            $ingredients = [];
+            foreach ($request->ingredients as $index => $ingredientId) {
+                if ($ingredientId && !empty($request->amounts[$index])) {
+                    $ingredients[$ingredientId] = ['amount_needed' => $request->amounts[$index]];
+                }
+            }
+            $product->ingredients()->sync($ingredients);
+        }
+
         return redirect()->route('owner.products.index')->with('success', 'Produk berhasil ditambahkan.');
     }
 
     public function edit(Product $product)
     {
         $categories = Category::all();
-        return view('owner.products.edit', compact('product', 'categories'));
+        $ingredients = \App\Models\Ingredient::all();
+        $product->load('ingredients');
+        return view('owner.products.edit', compact('product', 'categories', 'ingredients'));
     }
 
     public function update(Request $request, Product $product)
@@ -67,9 +84,12 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
             'is_available' => 'boolean',
-            'image' => 'nullable|image|max:2048'
+            'image' => 'nullable|image|max:2048',
+            'ingredients' => 'nullable|array',
+            'ingredients.*' => 'nullable|exists:ingredients,id',
+            'amounts' => 'nullable|array',
+            'amounts.*' => 'nullable|numeric|min:0.01'
         ]);
 
         if ($request->hasFile('image')) {
@@ -80,6 +100,17 @@ class ProductController extends Controller
         $validated['is_available'] = $request->has('is_available');
 
         $product->update($validated);
+
+        $ingredients = [];
+        if ($request->has('ingredients')) {
+            foreach ($request->ingredients as $index => $ingredientId) {
+                if ($ingredientId && !empty($request->amounts[$index])) {
+                    $ingredients[$ingredientId] = ['amount_needed' => $request->amounts[$index]];
+                }
+            }
+        }
+        $product->ingredients()->sync($ingredients);
+
         return redirect()->route('owner.products.index')->with('success', 'Produk berhasil diupdate.');
     }
 
