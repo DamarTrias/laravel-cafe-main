@@ -42,10 +42,12 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'is_available' => 'boolean',
             'image' => 'nullable|image|max:2048',
-            'ingredients' => 'nullable|array',
-            'ingredients.*' => 'nullable|exists:ingredients,id',
+            'ingredient_names' => 'nullable|array',
+            'ingredient_names.*' => 'nullable|string|max:255',
             'amounts' => 'nullable|array',
-            'amounts.*' => 'nullable|numeric|min:0.01'
+            'amounts.*' => 'nullable|numeric|min:0.01',
+            'units' => 'nullable|array',
+            'units.*' => 'nullable|string|max:50',
         ]);
 
         if ($request->hasFile('image')) {
@@ -56,11 +58,20 @@ class ProductController extends Controller
 
         $product = Product::create($validated);
 
-        if ($request->has('ingredients')) {
+        if ($request->has('ingredient_names')) {
             $ingredients = [];
-            foreach ($request->ingredients as $index => $ingredientId) {
-                if ($ingredientId && !empty($request->amounts[$index])) {
-                    $ingredients[$ingredientId] = ['amount_needed' => $request->amounts[$index]];
+            foreach ($request->ingredient_names as $index => $name) {
+                if (!empty($name) && !empty($request->amounts[$index])) {
+                    $unit = $request->units[$index] ?? '';
+                    $ingredient = \App\Models\Ingredient::firstOrCreate(
+                        ['name' => trim($name)],
+                        ['unit' => trim($unit), 'warehouse_stock' => 0, 'operational_stock' => 0]
+                    );
+                    // Update unit if changed
+                    if ($ingredient->unit !== trim($unit)) {
+                        $ingredient->update(['unit' => trim($unit)]);
+                    }
+                    $ingredients[$ingredient->id] = ['amount_needed' => $request->amounts[$index]];
                 }
             }
             $product->ingredients()->sync($ingredients);
@@ -86,10 +97,12 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'is_available' => 'boolean',
             'image' => 'nullable|image|max:2048',
-            'ingredients' => 'nullable|array',
-            'ingredients.*' => 'nullable|exists:ingredients,id',
+            'ingredient_names' => 'nullable|array',
+            'ingredient_names.*' => 'nullable|string|max:255',
             'amounts' => 'nullable|array',
-            'amounts.*' => 'nullable|numeric|min:0.01'
+            'amounts.*' => 'nullable|numeric|min:0.01',
+            'units' => 'nullable|array',
+            'units.*' => 'nullable|string|max:50',
         ]);
 
         if ($request->hasFile('image')) {
@@ -102,10 +115,18 @@ class ProductController extends Controller
         $product->update($validated);
 
         $ingredients = [];
-        if ($request->has('ingredients')) {
-            foreach ($request->ingredients as $index => $ingredientId) {
-                if ($ingredientId && !empty($request->amounts[$index])) {
-                    $ingredients[$ingredientId] = ['amount_needed' => $request->amounts[$index]];
+        if ($request->has('ingredient_names')) {
+            foreach ($request->ingredient_names as $index => $name) {
+                if (!empty($name) && !empty($request->amounts[$index])) {
+                    $unit = $request->units[$index] ?? '';
+                    $ingredient = \App\Models\Ingredient::firstOrCreate(
+                        ['name' => trim($name)],
+                        ['unit' => trim($unit), 'warehouse_stock' => 0, 'operational_stock' => 0]
+                    );
+                    if ($ingredient->unit !== trim($unit)) {
+                        $ingredient->update(['unit' => trim($unit)]);
+                    }
+                    $ingredients[$ingredient->id] = ['amount_needed' => $request->amounts[$index]];
                 }
             }
         }
