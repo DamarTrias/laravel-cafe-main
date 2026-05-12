@@ -36,7 +36,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
+            'category_name' => 'required|string|max:255',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
@@ -55,6 +55,10 @@ class ProductController extends Controller
         }
 
         $validated['is_available'] = $request->has('is_available');
+
+        $category = Category::firstOrCreate(['name' => trim($validated['category_name'])]);
+        $validated['category_id'] = $category->id;
+        unset($validated['category_name']);
 
         $product = Product::create($validated);
 
@@ -91,7 +95,7 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
+            'category_name' => 'required|string|max:255',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
@@ -111,6 +115,10 @@ class ProductController extends Controller
         }
 
         $validated['is_available'] = $request->has('is_available');
+
+        $category = Category::firstOrCreate(['name' => trim($validated['category_name'])]);
+        $validated['category_id'] = $category->id;
+        unset($validated['category_name']);
 
         $product->update($validated);
 

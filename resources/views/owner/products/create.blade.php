@@ -26,15 +26,24 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="category_id" class="form-label text-white">Kategori</label>
-                            <select class="form-select text-white" id="category_id" name="category_id" required>
-                                <option value="" disabled selected>Pilih Kategori</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <label class="form-label text-white d-flex justify-content-between">
+                                Kategori
+                                <small class="text-muted">Pilih dari daftar atau ketik manual</small>
+                            </label>
+                            <div class="row">
+                                <div class="col-md-5 mb-2 mb-md-0">
+                                    <select class="form-select bg-dark text-white border-secondary" id="category_select">
+                                        <option value="">-- Pilih dari yang sudah ada --</option>
+                                        @foreach($categories as $category)
+                                            <option value="{{ $category->name }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-7">
+                                    <input type="text" class="form-control bg-dark text-white border-secondary" id="category_name" name="category_name" required
+                                        value="{{ old('category_name') }}" placeholder="Nama kategori (cth: Minuman)">
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row mb-4">
@@ -134,6 +143,17 @@
             }
         }
     });
+
+    const categorySelect = document.getElementById('category_select');
+    const categoryNameInput = document.getElementById('category_name');
+
+    if (categorySelect && categoryNameInput) {
+        categorySelect.addEventListener('change', function() {
+            if (this.value) {
+                categoryNameInput.value = this.value;
+            }
+        });
+    }
 
     function buildOptions() {
         return existingIngredients.map(ing => 
