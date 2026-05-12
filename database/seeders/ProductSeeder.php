@@ -149,11 +149,31 @@ class ProductSeeder extends Seeder
         ];
 
         foreach ($products as $product) {
+            $name = strtolower($product['name']);
+            if ($name == 'chocolate hot/ice') $name = 'chocolate hot';
+            if ($name == 'cappuccino') $name = 'cappucino';
+            $imagePath = 'products/' . $name . '.jpg';
+            
+            // Cek apakah file gambar ada, jika tidak kosongkan
+            $image = \Illuminate\Support\Facades\Storage::disk('public')->exists($imagePath) ? $imagePath : null;
+
+            if ($name === 'espresso' && !$image) {
+                // Biarkan espresso memakai gambar default jika belum ada yg diupload
+                $files = \Illuminate\Support\Facades\Storage::disk('public')->files('products');
+                foreach ($files as $f) {
+                    if (strlen(pathinfo($f, PATHINFO_FILENAME)) > 20) {
+                        $image = $f;
+                        break;
+                    }
+                }
+            }
+
             Product::updateOrCreate(
                 ['name' => $product['name'], 'category_id' => $product['category_id']],
                 [
                     'description' => $product['description'],
                     'price' => $product['price'],
+                    'image' => $image,
                 ]
             );
         }

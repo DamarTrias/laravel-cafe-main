@@ -61,7 +61,7 @@
                             <td class="ps-4">{{ $loop->iteration }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <div class="rounded me-3 overflow-hidden border border-light border-opacity-25" style="width: 48px; height: 48px;">
+                                    <div class="rounded-3 me-3 overflow-hidden border border-light border-opacity-25 shadow-sm flex-shrink-0" style="width: 72px; height: 72px;">
                                         @if($product->image)
                                             <img src="{{ Storage::url($product->image) }}" alt="image" class="w-100 h-100 object-fit-cover">
                                         @else
