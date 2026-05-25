@@ -82,7 +82,7 @@
                 <form action="{{ route('pelanggan.checkout') }}" method="POST">
                     @csrf
                     <div class="mb-3">
-                        <label class="form-label text-muted">Tipe Pesanan</label>
+                        <label class="form-label text-white">Tipe Pesanan</label>
                         <select class="form-select bg-dark text-white border-secondary" name="order_type" id="order_type" onchange="toggleTableSelection()" required>
                             <option value="Dine In">Makan di Tempat (Dine In)</option>
                             <option value="Take Away">Bawa Pulang (Take Away)</option>
@@ -90,7 +90,7 @@
                     </div>
 
                     <div class="mb-3" id="table_selection_container">
-                        <label class="form-label text-muted d-flex justify-content-between align-items-center">
+                        <label class="form-label text-white d-flex justify-content-between align-items-center">
                             <span>Nomor Meja</span>
                             @if(session('table_number'))
                                 <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 small">
@@ -107,7 +107,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label text-muted">Metode Pembayaran</label>
+                        <label class="form-label text-white">Metode Pembayaran</label>
                         <select class="form-select bg-dark text-white border-secondary" name="payment_method" required>
                             <option value="Cash">Cash (Di Kasir)</option>
                             <option value="QRIS">QRIS / Transfer Bank</option>
@@ -115,7 +115,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label class="form-label text-muted">Catatan (Opsional)</label>
+                        <label class="form-label text-white">Catatan (Opsional)</label>
                         <textarea class="form-control bg-dark text-white border-secondary" name="note" rows="2" placeholder="Cth: Es dikurangin, kurangi gula..."></textarea>
                     </div>
 
