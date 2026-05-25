@@ -29,6 +29,9 @@
                         <td class="fw-medium">{{ $category->name }}</td>
                         <td class="text-muted small">{{ Str::limit($category->description, 50) }}</td>
                         <td class="text-end pe-4">
+                            <a href="{{ route('owner.categories.edit', $category) }}" class="btn btn-sm btn-outline-warning">
+                                <i class="bi bi-pencil"></i>
+                            </a>
                             <form action="{{ route('owner.categories.destroy', $category) }}" method="POST" class="d-inline-block">
                                 @csrf
                                 @method('DELETE')
