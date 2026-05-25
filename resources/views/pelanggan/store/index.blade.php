@@ -29,7 +29,8 @@
 </div>
 
 <!-- Category Filters -->
-<div class="d-flex overflow-auto pb-3 mb-4 justify-content-md-center gap-2">
+<!-- Desktop View: Horizontal Scroll/Sliding Buttons -->
+<div class="d-none d-md-flex overflow-auto pb-3 mb-4 justify-content-md-center gap-2">
     <a href="{{ route('pelanggan.store') }}" class="btn {{ !isset($category) ? 'btn-primary' : 'glass-card border-0 text-white' }} px-4 py-2 rounded-pill whitespace-nowrap">
         Semua Menu
     </a>
@@ -38,6 +39,39 @@
             {{ $cat->name }}
         </a>
     @endforeach
+</div>
+
+<!-- Mobile View: Hamburger Dropdown Menu -->
+<div class="d-flex d-md-none justify-content-center mb-4">
+    <div class="dropdown">
+        <button class="btn glass-card border-0 text-white px-4 py-2 rounded-pill d-flex align-items-center gap-2 dropdown-toggle" 
+                type="button" 
+                id="categoryDropdown" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false"
+                style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1) !important;">
+            <i class="bi bi-list fs-5 text-primary"></i> 
+            <span class="fw-semibold">Kategori: {{ isset($category) ? $category->name : 'Semua Menu' }}</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-start shadow-lg border-0 mt-2 p-2" 
+            aria-labelledby="categoryDropdown" 
+            style="background: rgba(15, 15, 17, 0.95); border: 1px solid rgba(255, 255, 255, 0.1) !important; backdrop-filter: blur(10px); border-radius: 12px; min-width: 200px;">
+            <li>
+                <a class="dropdown-item py-2 px-3 rounded {{ !isset($category) ? 'active bg-primary text-white' : 'text-white-50' }}" 
+                   href="{{ route('pelanggan.store') }}">
+                    Semua Menu
+                </a>
+            </li>
+            @foreach($categories as $cat)
+                <li>
+                    <a class="dropdown-item py-2 px-3 rounded mt-1 {{ isset($category) && $category->id == $cat->id ? 'active bg-primary text-white' : 'text-white-50' }}" 
+                       href="{{ route('pelanggan.category', $cat->id) }}">
+                        {{ $cat->name }}
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    </div>
 </div>
 
 <div class="row g-4 mt-2">

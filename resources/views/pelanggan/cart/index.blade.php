@@ -27,7 +27,18 @@
                                 @endif
                                 <div>
                                     <h5 class="fw-bold mb-1">{{ $item['name'] }}</h5>
-                                    <span class="text-primary fw-medium">Rp {{ number_format($item['price'], 0, ',', '.') }}</span> x {{ $item['quantity'] }}
+                                    <span class="text-primary fw-medium mb-2 d-block">Rp {{ number_format($item['price'], 0, ',', '.') }}</span>
+                                    <div class="d-flex align-items-center bg-dark rounded-pill px-2 py-1" style="width: fit-content; border: 1px solid rgba(255,255,255,0.1);">
+                                        <form action="{{ route('pelanggan.cart.decrement', $id) }}" method="POST" class="m-0 p-0">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-link text-white text-decoration-none p-0 px-2 fs-5"><i class="bi bi-dash"></i></button>
+                                        </form>
+                                        <span class="mx-2 fw-bold">{{ $item['quantity'] }}</span>
+                                        <form action="{{ route('pelanggan.cart.add', $id) }}" method="POST" class="m-0 p-0">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-link text-white text-decoration-none p-0 px-2 fs-5"><i class="bi bi-plus"></i></button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center">

@@ -57,6 +57,7 @@ Route::middleware(['auth', 'role:pelanggan'])->prefix('store')->name('pelanggan.
 
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/decrement/{product}', [CartController::class, 'decrement'])->name('cart.decrement');
     Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
     Route::post('/checkout', [PelangganOrderController::class, 'store'])->name('checkout');

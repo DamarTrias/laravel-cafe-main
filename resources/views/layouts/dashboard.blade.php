@@ -17,6 +17,9 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
+    <!-- Preload Background -->
+    <link rel="preload" as="image" href="/images/cafe_background.webp">
+
     <style>
         :root {
             --primary-color: #d4a373;
@@ -34,10 +37,8 @@
 
         body {
             font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-color);
-            background-image:
-                radial-gradient(circle at 15% 50%, rgba(212, 163, 115, 0.08), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(250, 237, 205, 0.05), transparent 25%);
+            background: linear-gradient(rgba(15, 15, 17, 0.6), rgba(15, 15, 17, 0.75)), url('/images/cafe_background.webp') no-repeat center center fixed;
+            background-size: cover;
             color: var(--text-main);
             min-height: 100vh;
         }
@@ -54,11 +55,13 @@
             font-weight: 700;
             color: var(--primary-color) !important;
             letter-spacing: 1px;
+            font-size: 1.75rem; /* Make logo bigger */
         }
 
         .nav-link {
             color: var(--text-main) !important;
             font-weight: 500;
+            font-size: 1.4rem; 
             transition: all 0.3s ease;
         }
 
@@ -235,7 +238,7 @@
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark navbar-glass sticky-top">
-        <div class="container">
+        <div class="container-fluid px-md-5">
             <a class="navbar-brand" href="#">
                 <i class="bi bi-cup-hot-fill me-2"></i>69 CAFE
             </a>
@@ -336,19 +339,7 @@
     </nav>
 
     <main class="container py-5 fade-in">
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show glass-card" role="alert">
-                <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
 
-        @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show glass-card" role="alert">
-                <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ session('error') }}
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
 
         @yield('content')
     </main>

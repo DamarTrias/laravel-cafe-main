@@ -43,6 +43,22 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'Produk ditambahkan ke keranjang!');
     }
 
+    public function decrement(Request $request, Product $product)
+    {
+        $cart = session()->get('cart', []);
+        
+        if (isset($cart[$product->id])) {
+            if ($cart[$product->id]['quantity'] > 1) {
+                $cart[$product->id]['quantity']--;
+            } else {
+                unset($cart[$product->id]);
+            }
+            session()->put('cart', $cart);
+        }
+
+        return redirect()->back()->with('success', 'Kuantitas produk dikurangi');
+    }
+
     public function remove(Request $request, $id)
     {
         $cart = session()->get('cart');

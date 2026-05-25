@@ -13,6 +13,9 @@
 
         <!-- Bootstrap Icons -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        
+        <!-- Preload Background -->
+        <link rel="preload" as="image" href="/images/cafe_background.webp">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -20,10 +23,8 @@
         <style>
             body {
                 font-family: 'Outfit', sans-serif;
-                background-color: #0f0f11;
-                background-image:
-                    radial-gradient(circle at 15% 50%, rgba(212, 163, 115, 0.08), transparent 25%),
-                    radial-gradient(circle at 85% 30%, rgba(250, 237, 205, 0.05), transparent 25%);
+                background: linear-gradient(rgba(15, 15, 17, 0.55), rgba(15, 15, 17, 0.7)), url('/images/cafe_background.webp') no-repeat center center fixed;
+                background-size: cover;
                 min-height: 100vh;
             }
 
@@ -66,7 +67,7 @@
         </style>
     </head>
     <body>
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
+        <div class="min-h-screen flex flex-col justify-center items-center">
             <div class="mb-6 text-center">
                 <a href="/" class="brand-logo text-decoration-none">
                     <i class="bi bi-cup-hot-fill me-2"></i>69 CAFE
