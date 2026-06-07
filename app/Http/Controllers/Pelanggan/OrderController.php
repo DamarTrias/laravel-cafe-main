@@ -68,7 +68,7 @@ class OrderController extends Controller
         try {
             $totalPrice = 0;
             foreach ($cart as $item) {
-                $totalPrice += $item['price'] * $item['quantity'];
+                $totalPrice += ($item['unit_price'] ?? $item['price']) * $item['quantity'];
             }
 
             $tableNumber = $validated['order_type'] === 'Take Away' ? 'Bawa Pulang' : $validated['table_number'];
