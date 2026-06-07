@@ -3,9 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
+    protected ?bool $cachedActualAvailability = null;
+    protected ?int $cachedMaxQuantity = null;
+    protected ?string $cachedThumbnailImage = null;
+
     protected $fillable = [
         'category_id',
         'name',
@@ -27,26 +32,64 @@ class Product extends Model
                     ->withTimestamps();
     }
 
+    public function addons()
+    {
+        return $this->hasMany(ProductAddon::class);
+    }
+
+    public function getThumbnailImageAttribute()
+    {
+        if (!$this->image) {
+            return null;
+        }
+
+        if ($this->cachedThumbnailImage !== null) {
+            return $this->cachedThumbnailImage;
+        }
+
+        $thumbnailPath = 'products/thumbs/' . basename($this->image);
+
+        if (Storage::disk('public')->exists($thumbnailPath)) {
+            return $this->cachedThumbnailImage = $thumbnailPath;
+        }
+
+        return $this->cachedThumbnailImage = $this->image;
+    }
+
     public function getIsActuallyAvailableAttribute()
     {
+        if ($this->cachedActualAvailability !== null) {
+            return $this->cachedActualAvailability;
+        }
+
         if (!$this->is_available) return false;
         
-        $ingredients = $this->ingredients;
-        if ($ingredients->isEmpty()) return true;
+        $ingredients = $this->loadedIngredients();
+
+        if ($ingredients->isEmpty()) {
+            return $this->cachedActualAvailability = true;
+        }
 
         foreach ($ingredients as $ingredient) {
             if ($ingredient->operational_stock < $ingredient->pivot->amount_needed) {
-                return false;
+                return $this->cachedActualAvailability = false;
             }
         }
 
-        return true;
+        return $this->cachedActualAvailability = true;
     }
 
     public function getMaxQuantityAttribute()
     {
-        $ingredients = $this->ingredients;
-        if ($ingredients->isEmpty()) return 99;
+        if ($this->cachedMaxQuantity !== null) {
+            return $this->cachedMaxQuantity;
+        }
+
+        $ingredients = $this->loadedIngredients();
+
+        if ($ingredients->isEmpty()) {
+            return $this->cachedMaxQuantity = 99;
+        }
 
         $max = 999;
         foreach ($ingredients as $ingredient) {
@@ -56,6 +99,13 @@ class Product extends Model
             }
         }
 
-        return $max;
+        return $this->cachedMaxQuantity = $max;
+    }
+
+    private function loadedIngredients()
+    {
+        return $this->relationLoaded('ingredients')
+            ? $this->getRelation('ingredients')
+            : $this->ingredients()->get();
     }
 }

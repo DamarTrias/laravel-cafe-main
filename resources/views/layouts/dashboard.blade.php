@@ -37,10 +37,20 @@
 
         body {
             font-family: 'Outfit', sans-serif;
-            background: linear-gradient(rgba(15, 15, 17, 0.6), rgba(15, 15, 17, 0.75)), url('/images/cafe_background.webp') no-repeat center center fixed;
-            background-size: cover;
+            background: #0f0f11;
             color: var(--text-main);
             min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background: linear-gradient(rgba(15, 15, 17, 0.6), rgba(15, 15, 17, 0.75)), url('/images/cafe_background.webp') no-repeat center center;
+            background-size: cover;
         }
 
         /* Glassmorphism Navbar */
@@ -141,7 +151,7 @@
         /* Form Inputs */
         .form-control,
         .form-select {
-            background: rgba(0, 0, 0, 0.2);
+            background-color: rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: var(--text-main);
             border-radius: 8px;
@@ -149,7 +159,7 @@
 
         .form-control:focus,
         .form-select:focus {
-            background: rgba(0, 0, 0, 0.3);
+            background-color: rgba(0, 0, 0, 0.3);
             border-color: var(--primary-color);
             box-shadow: 0 0 0 0.25rem rgba(212, 163, 115, 0.25);
             color: var(--text-main);
@@ -172,6 +182,21 @@
 
         .badge.bg-dibatalkan {
             background-color: #dc3545;
+        }
+
+        .navbar-cart-badge {
+            min-width: 1.35rem;
+            height: 1.35rem;
+            padding: 0 .3rem;
+            font-size: .7rem;
+            line-height: 1.35rem;
+            text-align: center;
+        }
+
+        .navbar-toggler .navbar-cart-badge {
+            position: absolute;
+            top: -.45rem;
+            right: -.45rem;
         }
 
         /* Animation */
@@ -232,19 +257,75 @@
         input::-webkit-credentials-auto-fill-button {
             filter: invert(100%);
         }
+
+        @media (max-width: 767.98px) {
+            html,
+            body {
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+
+            .navbar-glass,
+            .glass-card {
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+            }
+
+            .navbar-glass {
+                background: rgba(15, 15, 17, 0.95) !important;
+            }
+
+            .glass-card {
+                background: rgba(18, 18, 24, 0.82);
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+                transition: none;
+            }
+
+            .glass-card:hover {
+                transform: none;
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+            }
+
+            .fade-in {
+                animation: none;
+            }
+
+            .navbar-brand {
+                font-size: 1.35rem;
+            }
+
+            .nav-link {
+                font-size: 1rem;
+            }
+
+            .container-fluid {
+                max-width: 100%;
+            }
+        }
     </style>
 </head>
 
 <body>
 
+    @php
+        $navbarCartCount = collect(session('cart', []))->sum('quantity');
+    @endphp
+
     <nav class="navbar navbar-expand-lg navbar-dark navbar-glass sticky-top">
         <div class="container-fluid px-md-5">
             <a class="navbar-brand" href="#">
-                <i class="bi bi-cup-hot-fill me-2"></i>69 CAFE
+                <i class="bi bi-cup-hot-fill me-2"></i>After Class Cafe
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-toggle="collapse"
+            <button class="navbar-toggler position-relative" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
+                @auth
+                    @if(auth()->user()->role === 'pelanggan')
+                        <span class="cart-count-badge navbar-cart-badge badge bg-danger rounded-pill {{ $navbarCartCount > 0 ? '' : 'd-none' }}">
+                            {{ $navbarCartCount }}
+                        </span>
+                    @endif
+                @endauth
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
@@ -305,10 +386,9 @@
                             <li class="nav-item me-3">
                                 <a class="nav-link" href="{{ route('pelanggan.cart.index') }}">
                                     <i class="bi bi-cart3"></i>
-                                    @if(session('cart') && count(session('cart')) > 0)
-                                        <span
-                                            class="badge bg-danger rounded-pill">{{ collect(session('cart'))->sum('quantity') }}</span>
-                                    @endif
+                                    <span class="cart-count-badge navbar-cart-badge badge bg-danger rounded-pill {{ $navbarCartCount > 0 ? '' : 'd-none' }}">
+                                        {{ $navbarCartCount }}
+                                    </span>
                                 </a>
                             </li>
                         @endif
@@ -345,6 +425,14 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        window.updateCartCountBadges = function(cartCount) {
+            document.querySelectorAll('.cart-count-badge').forEach(function(badge) {
+                badge.textContent = cartCount;
+                badge.classList.toggle('d-none', cartCount <= 0);
+            });
+        };
+    </script>
     @stack('scripts')
 </body>
 

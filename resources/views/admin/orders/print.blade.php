@@ -84,7 +84,7 @@
     </div>
 
     <div class="header text-center">
-        <h2>69 CAFE</h2>
+        <h2>After Class Cafe</h2>
         <p>Jl. Merpati No. 123, Kota Kota</p>
         <p>Telp: 0812-3456-7890</p>
     </div>
@@ -116,6 +116,19 @@
                     <td class="text-center">{{ $item->quantity }}</td>
                     <td class="text-right">{{ number_format($item->price, 0, ',', '.') }}</td>
                 </tr>
+                @foreach($item->addons as $addon)
+                    <tr>
+                        <td colspan="2" style="font-size: 11px; padding-top: 0;">+ {{ $addon->name }}</td>
+                        <td class="text-right" style="font-size: 11px; padding-top: 0;">{{ number_format($addon->price, 0, ',', '.') }}</td>
+                    </tr>
+                @endforeach
+                @if($item->note)
+                    <tr>
+                        <td colspan="3" style="font-size: 11px; padding-top: 0;">
+                            Catatan: {{ $item->note }}
+                        </td>
+                    </tr>
+                @endif
             @endforeach
         </tbody>
     </table>

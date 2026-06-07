@@ -70,7 +70,7 @@
         <div class="min-h-screen flex flex-col justify-center items-center">
             <div class="mb-6 text-center">
                 <a href="/" class="brand-logo text-decoration-none">
-                    <i class="bi bi-cup-hot-fill me-2"></i>69 CAFE
+                    <i class="bi bi-cup-hot-fill me-2"></i>After Class Cafe
                 </a>
             </div>
 

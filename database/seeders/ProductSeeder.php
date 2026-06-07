@@ -50,6 +50,12 @@ class ProductSeeder extends Seeder
                 'description' => 'Perpaduan sempurna antara kopi, coklat, dan susu',
                 'price' => 29000,
             ],
+            [
+                'category_id' => 1,
+                'name' => 'Sea Salt Latte',
+                'description' => 'Latte creamy dengan sentuhan garam laut dan saus karamel yang menghasilkan rasa manis gurih seimbang',
+                'price' => 23000,
+            ],
 
             // Kategori 2: Non Kopi
             [
@@ -168,7 +174,7 @@ class ProductSeeder extends Seeder
                 }
             }
 
-            Product::updateOrCreate(
+            $savedProduct = Product::updateOrCreate(
                 ['name' => $product['name'], 'category_id' => $product['category_id']],
                 [
                     'description' => $product['description'],
@@ -176,6 +182,112 @@ class ProductSeeder extends Seeder
                     'image' => $image,
                 ]
             );
+
+            $defaultAddons = [
+                'Espresso' => [
+                    ['name' => 'Extra Shot', 'price' => 5000],
+                ],
+                'Americano' => [
+                    ['name' => 'Extra Shot', 'price' => 5000],
+                ],
+                'Cafe Latte' => [
+                    ['name' => 'Extra Shot', 'price' => 5000],
+                    ['name' => 'Syrup Vanilla', 'price' => 4000],
+                    ['name' => 'Whipped Cream', 'price' => 5000],
+                ],
+                'Cappuccino' => [
+                    ['name' => 'Extra Shot', 'price' => 5000],
+                    ['name' => 'Syrup Vanilla', 'price' => 4000],
+                ],
+                'Caramel Macchiato' => [
+                    ['name' => 'Extra Shot', 'price' => 5000],
+                    ['name' => 'Extra Caramel Sauce', 'price' => 4000],
+                    ['name' => 'Whipped Cream', 'price' => 5000],
+                ],
+                'Mocha Latte' => [
+                    ['name' => 'Extra Shot', 'price' => 5000],
+                    ['name' => 'Extra Chocolate Sauce', 'price' => 4000],
+                    ['name' => 'Whipped Cream', 'price' => 5000],
+                ],
+                'Sea Salt Latte' => [
+                    ['name' => 'Extra Shot', 'price' => 5000],
+                    ['name' => 'Extra Sea Salt Cream', 'price' => 5000],
+                    ['name' => 'Extra Caramel Sauce', 'price' => 4000],
+                ],
+                'Matcha Latte' => [
+                    ['name' => 'Extra Matcha', 'price' => 5000],
+                    ['name' => 'Whipped Cream', 'price' => 5000],
+                ],
+                'Taro Latte' => [
+                    ['name' => 'Extra Taro', 'price' => 5000],
+                    ['name' => 'Whipped Cream', 'price' => 5000],
+                ],
+                'Red Velvet Latte' => [
+                    ['name' => 'Cream Cheese Foam', 'price' => 6000],
+                    ['name' => 'Whipped Cream', 'price' => 5000],
+                ],
+                'Lychee Tea' => [
+                    ['name' => 'Extra Lychee', 'price' => 5000],
+                    ['name' => 'Extra Jelly', 'price' => 4000],
+                ],
+                'Chocolate Hot/Ice' => [
+                    ['name' => 'Extra Chocolate Sauce', 'price' => 4000],
+                    ['name' => 'Whipped Cream', 'price' => 5000],
+                ],
+                'Nasi Goreng Spesial' => [
+                    ['name' => 'Telur Ceplok', 'price' => 5000],
+                    ['name' => 'Extra Ayam', 'price' => 8000],
+                    ['name' => 'Extra Sambal', 'price' => 2000],
+                ],
+                'Mie Goreng Seafood' => [
+                    ['name' => 'Telur Ceplok', 'price' => 5000],
+                    ['name' => 'Extra Seafood', 'price' => 10000],
+                    ['name' => 'Extra Sambal', 'price' => 2000],
+                ],
+                'Chicken Cordon Bleu' => [
+                    ['name' => 'Extra Cheese', 'price' => 6000],
+                    ['name' => 'Extra Sauce', 'price' => 3000],
+                    ['name' => 'Extra Fries', 'price' => 8000],
+                ],
+                'Spaghetti Bolognese' => [
+                    ['name' => 'Extra Cheese', 'price' => 6000],
+                    ['name' => 'Extra Sauce', 'price' => 4000],
+                ],
+                'Rice Bowl Beef Teriyaki' => [
+                    ['name' => 'Telur Ceplok', 'price' => 5000],
+                    ['name' => 'Extra Beef', 'price' => 12000],
+                    ['name' => 'Extra Sauce', 'price' => 3000],
+                ],
+                'Kentang Goreng' => [
+                    ['name' => 'Extra Cheese Sauce', 'price' => 5000],
+                    ['name' => 'Extra Mayo', 'price' => 3000],
+                ],
+                'Platter Mix' => [
+                    ['name' => 'Extra Sausage', 'price' => 8000],
+                    ['name' => 'Extra Nugget', 'price' => 7000],
+                    ['name' => 'Extra Sauce', 'price' => 3000],
+                ],
+                'Roti Bakar Coklat Keju' => [
+                    ['name' => 'Extra Keju', 'price' => 5000],
+                    ['name' => 'Extra Coklat', 'price' => 4000],
+                ],
+                'Pisang Goreng Keju' => [
+                    ['name' => 'Extra Keju', 'price' => 5000],
+                    ['name' => 'Extra Susu', 'price' => 3000],
+                    ['name' => 'Extra Coklat', 'price' => 4000],
+                ],
+                'Dimsum Mentai' => [
+                    ['name' => 'Extra Mentai Sauce', 'price' => 5000],
+                    ['name' => 'Extra Chili Oil', 'price' => 3000],
+                ],
+            ];
+
+            foreach ($defaultAddons[$product['name']] ?? [] as $addon) {
+                $savedProduct->addons()->updateOrCreate(
+                    ['name' => $addon['name']],
+                    ['price' => $addon['price'], 'is_active' => true]
+                );
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         if ($order->user_id !== auth()->id()) abort(403);
-        $order->load('items.product');
+        $order->load('items.product', 'items.addons');
         return view('pelanggan.orders.show', compact('order'));
     }
 
@@ -42,11 +42,27 @@ class OrderController extends Controller
         }
 
         $validated = $request->validate([
-            'note' => 'nullable|string',
             'order_type' => 'required|in:Dine In,Take Away',
             'table_number' => 'required_if:order_type,Dine In|nullable|string',
-            'payment_method' => 'required|in:Cash,QRIS'
+            'payment_method' => 'required|in:Cash,QRIS',
+            'item_notes' => 'nullable|array',
+            'item_notes.*' => 'nullable|string|max:500',
+            'proof_of_transfer' => 'required_if:payment_method,QRIS|nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ], [
+            'table_number.required_if' => 'Silakan pilih nomor meja terlebih dahulu.',
+            'order_type.required' => 'Silakan pilih tipe pesanan.',
+            'payment_method.required' => 'Silakan pilih metode pembayaran.',
+            'proof_of_transfer.required_if' => 'Silakan upload bukti pembayaran QRIS terlebih dahulu.',
+            'proof_of_transfer.image' => 'Bukti pembayaran harus berupa file gambar.',
+            'proof_of_transfer.mimes' => 'Format gambar harus JPG, JPEG, PNG, GIF, atau WEBP.',
+            'proof_of_transfer.max' => 'Ukuran gambar maksimal 2 MB.',
         ]);
+
+        if ($validated['order_type'] === 'Take Away' && $validated['payment_method'] !== 'QRIS') {
+            return back()
+                ->withErrors(['payment_method' => 'Pesanan bawa pulang hanya bisa menggunakan QRIS / Transfer Bank.'])
+                ->withInput();
+        }
 
         DB::beginTransaction();
         try {
@@ -56,29 +72,44 @@ class OrderController extends Controller
             }
 
             $tableNumber = $validated['order_type'] === 'Take Away' ? 'Bawa Pulang' : $validated['table_number'];
+            $proofPath = null;
+
+            if ($validated['payment_method'] === 'QRIS') {
+                $proofPath = $request->file('proof_of_transfer')->store('proofs', 'public');
+            }
 
             $order = Order::create([
                 'user_id' => auth()->id(),
                 'total_price' => $totalPrice,
                 'status' => 'pending',
-                'note' => $validated['note'] ?? null,
+                'note' => null,
                 'table_number' => $tableNumber,
                 'payment_method' => $validated['payment_method'],
+                'proof_of_transfer' => $proofPath,
             ]);
 
-            foreach ($cart as $id => $item) {
+            foreach ($cart as $cartKey => $item) {
                 // Final stock check
-                $product = \App\Models\Product::with('ingredients')->find($id);
+                $productId = $item['product_id'] ?? $cartKey;
+                $product = \App\Models\Product::with('ingredients')->find($productId);
                 if (!$product || $product->max_quantity < $item['quantity']) {
                     throw new \Exception("Stok bahan untuk {$item['name']} tidak mencukupi.");
                 }
 
-                OrderItem::create([
+                $orderItem = OrderItem::create([
                     'order_id' => $order->id,
-                    'product_id' => $id,
+                    'product_id' => $productId,
                     'quantity' => $item['quantity'],
-                    'price' => $item['price'],
+                    'price' => $item['base_price'] ?? $item['price'],
+                    'note' => $validated['item_notes'][$cartKey] ?? null,
                 ]);
+
+                foreach (($item['addons'] ?? []) as $addon) {
+                    $orderItem->addons()->create([
+                        'name' => $addon['name'],
+                        'price' => $addon['price'],
+                    ]);
+                }
 
                 // Reduce ingredient operational stock
                 foreach ($product->ingredients as $ingredient) {
@@ -91,7 +122,7 @@ class OrderController extends Controller
 
             $message = 'Pesanan berhasil dibuat!';
             if ($order->payment_method === 'QRIS') {
-                $message .= ' Silakan unggah bukti transfer Anda di bawah ini.';
+                $message .= ' Bukti pembayaran berhasil diunggah, silakan tunggu verifikasi admin.';
                 return redirect()->route('pelanggan.orders.show', $order)->with('success', $message);
             }
 
@@ -115,7 +146,12 @@ class OrderController extends Controller
         }
 
         $request->validate([
-            'proof_of_transfer' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'proof_of_transfer' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
+        ], [
+            'proof_of_transfer.required' => 'Pilih file bukti pembayaran terlebih dahulu.',
+            'proof_of_transfer.image' => 'Bukti pembayaran harus berupa file gambar.',
+            'proof_of_transfer.mimes' => 'Format gambar harus JPG, JPEG, PNG, GIF, atau WEBP.',
+            'proof_of_transfer.max' => 'Ukuran gambar maksimal 2 MB.',
         ]);
 
         if ($request->hasFile('proof_of_transfer')) {
