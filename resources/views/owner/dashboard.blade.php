@@ -2,6 +2,16 @@
 
 @section('title', 'Owner Dashboard')
 
+@push('styles')
+<style>
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+        opacity: 0.8;
+        cursor: pointer;
+    }
+</style>
+@endpush
+
 @section('content')
     <div class="row align-items-center mb-4">
         <div class="col-md-6">
@@ -54,7 +64,7 @@
                             <i class="bi bi-box-seam fs-4"></i>
                         </div>
                         <div>
-                            <h6 class="text-muted mb-1 mb-0">Total Produk</h6>
+                            <h6 class="text-white mb-1 mb-0">Total Produk</h6>
                             <h3 class="fw-bold text-white mb-0">{{ $productCount }}</h3>
                         </div>
                     </div>
@@ -74,7 +84,7 @@
                             <i class="bi bi-tags fs-4"></i>
                         </div>
                         <div>
-                            <h6 class="text-muted mb-1 mb-0">Total Kategori</h6>
+                            <h6 class="text-white mb-1 mb-0">Total Kategori</h6>
                             <h3 class="fw-bold text-white mb-0">{{ $categoryCount }}</h3>
                         </div>
                     </div>
@@ -93,7 +103,7 @@
                             <i class="bi bi-cash-stack fs-4"></i>
                         </div>
                         <div>
-                            <h6 class="text-muted mb-1 mb-0">Total Penjualan</h6>
+                            <h6 class="text-white mb-1 mb-0">Total Penjualan</h6>
                             <h4 class="fw-bold text-white mb-0 text-truncate" style="max-width: 150px;">
                                 Rp {{ number_format($totalPenjualan, 0, ',', '.') }}
                             </h4>

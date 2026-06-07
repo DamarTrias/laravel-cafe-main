@@ -258,6 +258,13 @@
             filter: invert(100%);
         }
 
+        /* Calendar Icon - White */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            opacity: 0.8;
+            cursor: pointer;
+        }
+
         @media (max-width: 767.98px) {
             html,
             body {

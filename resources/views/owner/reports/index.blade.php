@@ -23,12 +23,12 @@
     <div class="card-body p-4">
         <form action="{{ route('owner.reports.index') }}" method="GET" class="row g-3 align-items-end">
             <div class="col-md-4">
-                <label class="form-label text-muted small">Mulai Tanggal</label>
+                <label class="form-label text-white small">Mulai Tanggal</label>
                 <input type="date" name="start_date" class="form-control bg-dark text-white border-secondary" value="{{ $startDate }}">
             </div>
             <div class="col-md-1 text-center text-muted mb-2 d-none d-md-block">-</div>
             <div class="col-md-4">
-                <label class="form-label text-muted small">Sampai Tanggal</label>
+                <label class="form-label text-white small">Sampai Tanggal</label>
                 <input type="date" name="end_date" class="form-control bg-dark text-white border-secondary" value="{{ $endDate }}">
             </div>
             <div class="col-md-3">
@@ -44,7 +44,7 @@
     <div class="col-md-6">
         <div class="glass-card card border-0 h-100">
             <div class="card-body text-center py-4">
-                <p class="text-muted small mb-1">TOTAL PENDAPATAN</p>
+                <p class="text-white small mb-1">TOTAL PENDAPATAN</p>
                 <h2 class="fw-bold text-primary mb-0">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</h2>
             </div>
         </div>
@@ -52,7 +52,7 @@
     <div class="col-md-6">
         <div class="glass-card card border-0 h-100">
             <div class="card-body text-center py-4">
-                <p class="text-muted small mb-1">JUMLAH TRANSAKSI</p>
+                <p class="text-white small mb-1">JUMLAH TRANSAKSI</p>
                 <h2 class="fw-bold text-primary mb-0">{{ $totalOrders }} Pesanan</h2>
             </div>
         </div>
