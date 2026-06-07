@@ -35,8 +35,8 @@
                         <i class="bi bi-exclamation-triangle-fill text-warning fs-5"></i>
                     </div>
                     <div class="flex-grow-1">
-                        <strong class="text-white">Peringatan Stok Bahan Rendah!</strong>
-                        <p class="mb-0 text-muted small">Ada {{ $lowStockIngredients->count() }} bahan yang stoknya hampir habis (Gudang < 5 atau Operasional < 2). Harap segera cek stok bahan.</p>
+                        <strong class="text-warning">Peringatan Stok Bahan Rendah!</strong>
+                        <p class="mb-0 text-white small">Ada {{ $lowStockIngredients->count() }} bahan yang stoknya hampir habis (Gudang < 5 atau Operasional < 2). Harap segera cek stok bahan.</p>
                     </div>
                     <a href="{{ route('owner.ingredients.index') }}" class="btn btn-sm btn-warning fw-bold px-3 ms-3">Lihat Stok Bahan</a>
                 </div>

@@ -6,7 +6,7 @@
 <div class="row justify-content-center mb-5 mt-4">
     <div class="col-md-8 text-center">
         <h1 class="display-4 fw-bold text-primary mb-3">Menu Kami</h1>
-        <p class="text-muted fs-5 mb-4">Pesan kopi dan hidangan favoritmu sekarang.</p>
+        <p class="text-white fs-5 mb-4">Pesan kopi dan hidangan favoritmu sekarang.</p>
         @php $baseUrl = isset($category) ? route('pelanggan.category', $category) : route('pelanggan.store'); @endphp
         <form action="{{ $baseUrl }}" method="GET">
             <div class="input-group glass-card p-1 rounded-pill overflow-hidden shadow-sm" style="background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.4)!important">
