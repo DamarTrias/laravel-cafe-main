@@ -2,6 +2,16 @@
 
 @section('title', 'Owner Dashboard')
 
+@push('styles')
+<style>
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+        opacity: 0.8;
+        cursor: pointer;
+    }
+</style>
+@endpush
+
 @section('content')
     <div class="row align-items-center mb-4">
         <div class="col-md-6">
@@ -36,7 +46,7 @@
                     </div>
                     <div class="flex-grow-1">
                         <strong class="text-white">Peringatan Stok Bahan Rendah!</strong>
-                        <p class="mb-0 text-white small">Ada {{ $lowStockIngredients->count() }} bahan yang stoknya hampir habis (Gudang < 5 atau Operasional < 2). Harap segera cek stok bahan.</p>
+                        <p class="mb-0 text-muted small">Ada {{ $lowStockIngredients->count() }} bahan yang stoknya hampir habis (Gudang < 5 atau Operasional < 2). Harap segera cek stok bahan.</p>
                     </div>
                     <a href="{{ route('owner.ingredients.index') }}" class="btn btn-sm btn-warning fw-bold px-3 ms-3">Lihat Stok Bahan</a>
                 </div>

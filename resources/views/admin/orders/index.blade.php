@@ -73,16 +73,32 @@
                             <a href="{{ route('admin.orders.print', $order) }}" target="_blank" class="btn btn-sm btn-outline-warning me-1">Cetak</a>
                             <a href="{{ route('admin.orders.show', $order) }}" class="btn btn-sm btn-outline-info me-1">Detail</a>
                             
-                            <form action="{{ route('admin.orders.update', $order) }}" method="POST" class="d-inline-block">
+                            <form action="{{ route('admin.orders.update', $order) }}" method="POST" class="d-inline-block order-status-form">
                                 @csrf
                                 @method('PUT')
-                                <div class="input-group input-group-sm" style="width: auto;">
-                                    <select name="status" class="form-select bg-dark text-white border-secondary" style="width: auto; min-width: 120px;" onchange="this.form.submit()">
+                                <div class="input-group input-group-sm order-status-group d-none d-md-flex">
+                                    <select name="status" class="form-select bg-dark text-white border-secondary order-status-select" onchange="this.form.submit()">
                                         <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
                                         <option value="diproses" {{ $order->status == 'diproses' ? 'selected' : '' }}>Diproses</option>
                                         <option value="selesai" {{ $order->status == 'selesai' ? 'selected' : '' }}>Selesai</option>
                                         <option value="dibatalkan" {{ $order->status == 'dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
                                     </select>
+                                </div>
+                                <div class="dropdown d-md-none order-status-mobile-dropdown">
+                                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle order-status-mobile-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        {{ ucfirst($order->status) }}
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-dark order-status-mobile-menu">
+                                        @foreach(['pending' => 'Pending', 'diproses' => 'Diproses', 'selesai' => 'Selesai', 'dibatalkan' => 'Dibatalkan'] as $statusValue => $statusLabel)
+                                            <li>
+                                                <button type="button"
+                                                    class="dropdown-item order-status-mobile-option {{ $order->status === $statusValue ? 'active' : '' }}"
+                                                    data-status="{{ $statusValue }}">
+                                                    {{ $statusLabel }}
+                                                </button>
+                                            </li>
+                                        @endforeach
+                                    </ul>
                                 </div>
                             </form>
                         </td>
@@ -97,4 +113,62 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<style>
+    .order-status-group,
+    .order-status-select {
+        width: auto;
+        min-width: 120px;
+    }
+
+    @media (max-width: 767.98px) {
+        .order-status-form,
+        .order-status-mobile-dropdown {
+            display: inline-block !important;
+            width: 88px !important;
+            min-width: 88px !important;
+            max-width: 88px !important;
+        }
+
+        .order-status-mobile-button {
+            width: 88px !important;
+            min-width: 88px !important;
+            max-width: 88px !important;
+            overflow: hidden;
+            padding: .2rem .35rem;
+            font-size: .72rem;
+            line-height: 1.2;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .order-status-mobile-menu {
+            min-width: 88px !important;
+            width: 88px !important;
+            padding: .2rem;
+        }
+
+        .order-status-mobile-option {
+            padding: .3rem .4rem;
+            font-size: .75rem;
+            line-height: 1.2;
+            border-radius: .2rem;
+        }
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.order-status-mobile-option').forEach(function(option) {
+            option.addEventListener('click', function() {
+                const form = this.closest('.order-status-form');
+                const select = form.querySelector('.order-status-select');
+
+                select.value = this.dataset.status;
+                form.submit();
+            });
+        });
+    });
+</script>
+@endpush
 @endsection

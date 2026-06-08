@@ -42,12 +42,16 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'is_available' => 'boolean',
             'image' => 'nullable|image|max:2048',
-            'ingredient_names' => 'nullable|array',
-            'ingredient_names.*' => 'nullable|string|max:255',
-            'amounts' => 'nullable|array',
-            'amounts.*' => 'nullable|numeric|min:0.01',
-            'units' => 'nullable|array',
-            'units.*' => 'nullable|string|max:50',
+            'ingredient_names' => 'required|array|min:1',
+            'ingredient_names.*' => 'required|string|max:255',
+            'amounts' => 'required|array|min:1',
+            'amounts.*' => 'required|numeric|min:0.01',
+            'units' => 'required|array|min:1',
+            'units.*' => 'required|string|max:50',
+            'addon_names' => 'nullable|array',
+            'addon_names.*' => 'nullable|string|max:255',
+            'addon_prices' => 'nullable|array',
+            'addon_prices.*' => 'nullable|numeric|min:0',
         ]);
 
         if ($request->hasFile('image')) {
@@ -81,6 +85,8 @@ class ProductController extends Controller
             $product->ingredients()->sync($ingredients);
         }
 
+        $this->syncAddons($product, $request);
+
         return redirect()->route('owner.products.index')->with('success', 'Produk berhasil ditambahkan.');
     }
 
@@ -88,7 +94,7 @@ class ProductController extends Controller
     {
         $categories = Category::all();
         $ingredients = \App\Models\Ingredient::all();
-        $product->load('ingredients');
+        $product->load('ingredients', 'addons');
         return view('owner.products.edit', compact('product', 'categories', 'ingredients'));
     }
 
@@ -101,12 +107,16 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'is_available' => 'boolean',
             'image' => 'nullable|image|max:2048',
-            'ingredient_names' => 'nullable|array',
-            'ingredient_names.*' => 'nullable|string|max:255',
-            'amounts' => 'nullable|array',
-            'amounts.*' => 'nullable|numeric|min:0.01',
-            'units' => 'nullable|array',
-            'units.*' => 'nullable|string|max:50',
+            'ingredient_names' => 'required|array|min:1',
+            'ingredient_names.*' => 'required|string|max:255',
+            'amounts' => 'required|array|min:1',
+            'amounts.*' => 'required|numeric|min:0.01',
+            'units' => 'required|array|min:1',
+            'units.*' => 'required|string|max:50',
+            'addon_names' => 'nullable|array',
+            'addon_names.*' => 'nullable|string|max:255',
+            'addon_prices' => 'nullable|array',
+            'addon_prices.*' => 'nullable|numeric|min:0',
         ]);
 
         if ($request->hasFile('image')) {
@@ -139,6 +149,7 @@ class ProductController extends Controller
             }
         }
         $product->ingredients()->sync($ingredients);
+        $this->syncAddons($product, $request);
 
         return redirect()->route('owner.products.index')->with('success', 'Produk berhasil diupdate.');
     }
@@ -148,5 +159,25 @@ class ProductController extends Controller
         if ($product->image) Storage::disk('public')->delete($product->image);
         $product->delete();
         return redirect()->route('owner.products.index')->with('success', 'Produk berhasil dihapus.');
+    }
+
+    private function syncAddons(Product $product, Request $request): void
+    {
+        $addons = [];
+        foreach ($request->input('addon_names', []) as $index => $name) {
+            $name = trim((string) $name);
+            if ($name === '') {
+                continue;
+            }
+
+            $addons[] = [
+                'name' => $name,
+                'price' => (int) ($request->input("addon_prices.$index") ?? 0),
+                'is_active' => true,
+            ];
+        }
+
+        $product->addons()->delete();
+        $product->addons()->createMany($addons);
     }
 }

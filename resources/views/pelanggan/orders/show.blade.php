@@ -46,10 +46,20 @@
                                         <div class="text-secondary small">
                                             {{ $item->quantity }} x Rp {{ number_format($item->price, 0, ',', '.') }}
                                         </div>
+                                        @foreach($item->addons as $addon)
+                                            <div class="text-white small">
+                                                <span class="text-primary fw-bold">+ {{ $addon->name }}</span> Rp {{ number_format($addon->price, 0, ',', '.') }}
+                                            </div>
+                                        @endforeach
+                                        @if($item->note)
+                                            <div class="text-white small mt-2">
+                                                <span class="text-primary fw-bold">Catatan:</span> {{ $item->note }}
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="text-end">
-                                    <h5 class="fw-bold text-primary mb-0">Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</h5>
+                                    <h5 class="fw-bold text-primary mb-0">Rp {{ number_format(($item->price + $item->addons->sum('price')) * $item->quantity, 0, ',', '.') }}</h5>
                                 </div>
                             </div>
                         </li>
@@ -105,10 +115,20 @@
                                 <div class="alert alert-warning py-2 px-3 border-0 bg-warning bg-opacity-10 text-warning small mb-3">
                                     <i class="bi bi-exclamation-triangle me-2"></i> Harap upload bukti pembayaran.
                                 </div>
-                                <form action="{{ route('pelanggan.orders.upload_proof', $order) }}" method="POST" enctype="multipart/form-data">
+                                <form id="proofUploadForm" action="{{ route('pelanggan.orders.upload_proof', $order) }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="mb-3">
-                                        <input type="file" name="proof_of_transfer" class="form-control form-control-sm bg-dark text-white border-light border-opacity-25" required>
+                                        <input id="proofOfTransferInput" type="file" name="proof_of_transfer" class="form-control form-control-sm bg-dark text-white border-light border-opacity-25" accept="image/jpeg,image/png,image/gif,image/webp" required>
+                                        <div id="proofFileWarning" class="text-danger small mt-2 d-none">
+                                            <i class="bi bi-exclamation-circle me-1"></i>
+                                            <span></span>
+                                        </div>
+                                        @error('proof_of_transfer')
+                                            <div class="text-danger small mt-2">
+                                                <i class="bi bi-exclamation-circle me-1"></i>{{ $message }}
+                                            </div>
+                                        @enderror
+                                        <div class="text-muted small mt-2">Format gambar: JPG, JPEG, PNG, GIF, atau WEBP. Maksimal 2 MB.</div>
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-sm w-100 fw-bold">
                                         <i class="bi bi-cloud-upload me-1"></i> Upload Bukti
@@ -122,18 +142,6 @@
                 @endif
             </div>
         </div>
-
-        <!-- Note Card -->
-        <div class="glass-card card border-0 shadow-sm">
-            <div class="card-header border-bottom border-light border-opacity-10 py-3">
-                <h5 class="mb-0 text-white fw-bold"><i class="bi bi-chat-left-text me-2"></i>Catatan</h5>
-            </div>
-            <div class="card-body p-4">
-                <div class="p-3 bg-dark bg-opacity-50 rounded border border-light border-opacity-10 text-white small lh-base">
-                    {!! nl2br(e($order->note ?? 'Tidak ada catatan untuk pesanan ini.')) !!}
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -142,6 +150,49 @@
     const orderId = "{{ $order->id }}";
     const statusBadge = document.getElementById('order-status-badge');
     let currentStatus = "{{ $order->status }}";
+    const proofUploadForm = document.getElementById('proofUploadForm');
+    const proofInput = document.getElementById('proofOfTransferInput');
+    const proofWarning = document.getElementById('proofFileWarning');
+    const allowedProofTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    const maxProofSize = 2 * 1024 * 1024;
+
+    function validateProofFile() {
+        if (!proofInput || !proofWarning) return true;
+
+        const file = proofInput.files[0];
+        const warningText = proofWarning.querySelector('span');
+        let message = '';
+
+        if (file && !allowedProofTypes.includes(file.type)) {
+            message = 'File tidak sesuai. Pilih file gambar JPG, JPEG, PNG, GIF, atau WEBP.';
+        } else if (file && file.size > maxProofSize) {
+            message = 'Ukuran gambar terlalu besar. Maksimal 2 MB.';
+        }
+
+        warningText.textContent = message;
+        proofWarning.classList.toggle('d-none', !message);
+        proofInput.classList.toggle('is-invalid', Boolean(message));
+
+        return !message;
+    }
+
+    if (proofInput) {
+        proofInput.addEventListener('change', function() {
+            if (!validateProofFile()) {
+                proofInput.value = '';
+            }
+        });
+    }
+
+    if (proofUploadForm) {
+        proofUploadForm.addEventListener('submit', function(event) {
+            if (!validateProofFile()) {
+                event.preventDefault();
+                proofInput.value = '';
+                proofInput.focus();
+            }
+        });
+    }
 
     function checkOrderStatus() {
         // Jangan pooling jika pesanan sudah selesai atau dibatalkan

@@ -67,13 +67,13 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-5">
-                                        <input type="text" name="ingredient_names[]" class="form-control bg-dark text-white border-secondary ingredient-name" placeholder="Nama bahan (cth: Kopi Arabika)">
+                                        <input type="text" name="ingredient_names[]" class="form-control bg-dark text-white border-secondary ingredient-name" placeholder="Nama bahan (cth: Kopi Arabika)" required>
                                     </div>
                                     <div class="col-4">
-                                        <input type="number" step="0.01" name="amounts[]" class="form-control bg-dark text-white border-secondary" placeholder="Jumlah">
+                                        <input type="number" step="0.01" name="amounts[]" class="form-control bg-dark text-white border-secondary" placeholder="Jumlah" required>
                                     </div>
                                     <div class="col-3">
-                                        <input type="text" name="units[]" class="form-control bg-dark text-white border-secondary ingredient-unit" placeholder="Satuan (cth: gr)">
+                                        <input type="text" name="units[]" class="form-control bg-dark text-white border-secondary ingredient-unit" placeholder="Satuan (cth: gr)" required>
                                     </div>
                                 </div>
                             </div>
@@ -87,6 +87,29 @@
                         <label for="description" class="form-label text-white">Deskripsi (Opsional)</label>
                         <textarea class="form-control text-white" id="description" name="description" rows="3"
                             placeholder="Gambarkan rasa atau komposisi menu...">{{ old('description') }}</textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label text-white d-flex justify-content-between">
+                            Add-on Berbayar
+                            <small class="text-muted">Opsional, contoh: Telur Ceplok + Rp 5.000</small>
+                        </label>
+                        <div id="addons-container">
+                            <div class="mb-2 addon-row row g-2">
+                                <div class="col-md-7">
+                                    <input type="text" name="addon_names[]" class="form-control bg-dark text-white border-secondary" placeholder="Nama add-on">
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="number" name="addon_prices[]" class="form-control bg-dark text-white border-secondary" placeholder="Harga">
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-outline-danger w-100 remove-addon"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" id="add-addon" class="btn btn-outline-success btn-sm mt-2">
+                            <i class="bi bi-plus-circle me-1"></i> Tambah Add-on
+                        </button>
                     </div>
 
                     <div class="mb-4">
@@ -114,6 +137,8 @@
 <script>
     const container = document.getElementById('ingredients-container');
     const addButton = document.getElementById('add-ingredient');
+    const addonsContainer = document.getElementById('addons-container');
+    const addAddonButton = document.getElementById('add-addon');
 
     // Data bahan yang sudah ada
     const existingIngredients = @json($ingredients->map(fn($i) => ['name' => $i->name, 'unit' => $i->unit]));
@@ -161,13 +186,13 @@
                 </div>
                 <div class="row">
                     <div class="col-5">
-                        <input type="text" name="ingredient_names[]" class="form-control bg-dark text-white border-secondary ingredient-name" placeholder="Nama bahan (cth: Kopi Arabika)">
+                        <input type="text" name="ingredient_names[]" class="form-control bg-dark text-white border-secondary ingredient-name" placeholder="Nama bahan (cth: Kopi Arabika)" required>
                     </div>
                     <div class="col-4">
-                        <input type="number" step="0.01" name="amounts[]" class="form-control bg-dark text-white border-secondary" placeholder="Jumlah">
+                        <input type="number" step="0.01" name="amounts[]" class="form-control bg-dark text-white border-secondary" placeholder="Jumlah" required>
                     </div>
                     <div class="col-3">
-                        <input type="text" name="units[]" class="form-control bg-dark text-white border-secondary ingredient-unit" placeholder="Satuan (cth: gr)">
+                        <input type="text" name="units[]" class="form-control bg-dark text-white border-secondary ingredient-unit" placeholder="Satuan (cth: gr)" required>
                     </div>
                 </div>
             `;
@@ -190,6 +215,40 @@
     }
 
     document.querySelectorAll('.remove-ingredient').forEach(attachRemoveEvent);
+
+    function attachRemoveAddon(button) {
+        if (!button) return;
+        button.addEventListener('click', (e) => {
+            const row = e.target.closest('.addon-row');
+            if (row && document.querySelectorAll('.addon-row').length > 1) {
+                row.remove();
+            } else if (row) {
+                row.querySelectorAll('input').forEach(input => input.value = '');
+            }
+        });
+    }
+
+    if (addAddonButton && addonsContainer) {
+        addAddonButton.addEventListener('click', () => {
+            const row = document.createElement('div');
+            row.className = 'mb-2 addon-row row g-2';
+            row.innerHTML = `
+                <div class="col-md-7">
+                    <input type="text" name="addon_names[]" class="form-control bg-dark text-white border-secondary" placeholder="Nama add-on">
+                </div>
+                <div class="col-md-4">
+                    <input type="number" name="addon_prices[]" class="form-control bg-dark text-white border-secondary" placeholder="Harga">
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-outline-danger w-100 remove-addon"><i class="bi bi-trash"></i></button>
+                </div>
+            `;
+            addonsContainer.appendChild(row);
+            attachRemoveAddon(row.querySelector('.remove-addon'));
+        });
+    }
+
+    document.querySelectorAll('.remove-addon').forEach(attachRemoveAddon);
 </script>
 @endpush
 @endsection

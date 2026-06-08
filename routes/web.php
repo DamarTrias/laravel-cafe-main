@@ -10,7 +10,7 @@ use App\Http\Controllers\Pelanggan\CartController;
 use App\Http\Controllers\Pelanggan\OrderController as PelangganOrderController;
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    return redirect()->route('pelanggan.store');
 });
 
 Route::get('/dashboard', function () {
@@ -23,6 +23,16 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 use App\Http\Controllers\Owner\DashboardController as OwnerDashboardController;
+
+Route::get('/store', function () {
+    return redirect()->route('pelanggan.store');
+});
+
+Route::prefix('menu')->name('pelanggan.')->group(function () {
+    Route::get('/', [StoreController::class, 'index'])->name('store');
+    Route::get('/category/{category}', [StoreController::class, 'category'])->name('category');
+    Route::get('/product/{product}', [StoreController::class, 'product'])->name('product');
+});
 
 // OWNER ROUTES
 Route::middleware(['auth', 'role:owner'])->prefix('owner')->name('owner.')->group(function () {
@@ -51,13 +61,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 // PELANGGAN ROUTES
 Route::middleware(['auth', 'role:pelanggan'])->prefix('store')->name('pelanggan.')->group(function () {
-    Route::get('/', [StoreController::class, 'index'])->name('store');
-    Route::get('/category/{category}', [StoreController::class, 'category'])->name('category');
-    Route::get('/product/{product}', [StoreController::class, 'product'])->name('product');
-
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/decrement/{product}', [CartController::class, 'decrement'])->name('cart.decrement');
+    Route::post('/cart/update-addons', [CartController::class, 'updateAddons'])->name('cart.update_addons');
     Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
     Route::post('/checkout', [PelangganOrderController::class, 'store'])->name('checkout');
