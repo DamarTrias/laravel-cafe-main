@@ -36,7 +36,7 @@
                     </div>
                     <div class="flex-grow-1">
                         <strong class="text-white">Peringatan Stok Bahan Rendah!</strong>
-                        <p class="mb-0 text-muted small">Ada {{ $lowStockIngredients->count() }} bahan yang stoknya hampir habis (Gudang < 5 atau Operasional < 2). Harap segera cek stok bahan.</p>
+                        <p class="mb-0 text-white small">Ada {{ $lowStockIngredients->count() }} bahan yang stoknya hampir habis (Gudang < 5 atau Operasional < 2). Harap segera cek stok bahan.</p>
                     </div>
                     <a href="{{ route('owner.ingredients.index') }}" class="btn btn-sm btn-warning fw-bold px-3 ms-3">Lihat Stok Bahan</a>
                 </div>
@@ -54,7 +54,7 @@
                             <i class="bi bi-box-seam fs-4"></i>
                         </div>
                         <div>
-                            <h6 class="text-muted mb-1 mb-0">Total Produk</h6>
+                            <h6 class="text-white mb-1 mb-0">Total Produk</h6>
                             <h3 class="fw-bold text-white mb-0">{{ $productCount }}</h3>
                         </div>
                     </div>
@@ -74,7 +74,7 @@
                             <i class="bi bi-tags fs-4"></i>
                         </div>
                         <div>
-                            <h6 class="text-muted mb-1 mb-0">Total Kategori</h6>
+                            <h6 class="text-white mb-1 mb-0">Total Kategori</h6>
                             <h3 class="fw-bold text-white mb-0">{{ $categoryCount }}</h3>
                         </div>
                     </div>
@@ -93,7 +93,7 @@
                             <i class="bi bi-cash-stack fs-4"></i>
                         </div>
                         <div>
-                            <h6 class="text-muted mb-1 mb-0">Total Penjualan</h6>
+                            <h6 class="text-white mb-1 mb-0">Total Penjualan</h6>
                             <h4 class="fw-bold text-white mb-0 text-truncate" style="max-width: 150px;">
                                 Rp {{ number_format($totalPenjualan, 0, ',', '.') }}
                             </h4>

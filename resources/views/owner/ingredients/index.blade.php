@@ -6,7 +6,7 @@
     <div class="row align-items-center mb-4">
         <div class="col-md-6">
             <h2 class="fw-bold text-white mb-0 text-primary">Manajemen Stok & Bahan</h2>
-            <p class="text-muted small mb-0">Kelola <strong>Stok Gudang</strong> (Cadangan Besar) dan <strong>Stok
+            <p class="text-white small mb-0">Kelola <strong>Stok Gudang</strong> (Cadangan Besar) dan <strong>Stok
                     Operasional</strong> (Untuk jualan hari ini).</p>
         </div>
         <div class="col-md-6 text-md-end mt-3 mt-md-0">
@@ -122,17 +122,17 @@
                                 aria-label="Close"></button>
                         </div>
                         <div class="modal-body text-start p-4">
-                            <p class="mb-4 text-muted small lh-sm">Pindahkan stok besar dari gudang ke operasional toko agar
+                            <p class="mb-4 text-white small lh-sm">Pindahkan stok besar dari gudang ke operasional toko agar
                                 menu dapat tersedia untuk dipesan pelanggan hari ini.</p>
 
                             <div
                                 class="p-3 rounded-4 bg-dark bg-opacity-50 border border-light border-opacity-10 mb-4 shadow-inner">
                                 <div class="d-flex justify-content-between mb-2">
-                                    <span class="text-muted small">Bahan Baku:</span>
+                                    <span class="text-white small">Bahan Baku:</span>
                                     <span class="fw-bold">{{ $ingredient->name }}</span>
                                 </div>
                                 <div class="d-flex justify-content-between">
-                                    <span class="text-muted small">Tersedia di Gudang:</span>
+                                    <span class="text-white small">Tersedia di Gudang:</span>
                                     <span
                                         class="fw-bold text-success">{{ number_format($ingredient->warehouse_stock, 0, ',', '.') }}
                                         {{ $ingredient->unit }}</span>
@@ -147,12 +147,12 @@
                                     name="amount" id="amount{{ $ingredient->id }}" required
                                     max="{{ $ingredient->warehouse_stock }}" min="0.01" step="0.01"
                                     placeholder="Masukkan jumlah...">
-                                <small class="text-muted mt-2 d-block">Jumlah ini akan langsung menambah **Stok
+                                <small class="text-white mt-2 d-block">Jumlah ini akan langsung menambah **Stok
                                     Operasional**.</small>
                             </div>
                         </div>
                         <div class="modal-footer border-top border-light border-opacity-10 p-3">
-                            <button type="button" class="btn btn-link text-muted text-decoration-none px-3"
+                            <button type="button" class="btn btn-link text-white text-decoration-none px-3"
                                 data-bs-dismiss="modal">Batal</button>
                             <button type="submit" class="btn btn-primary px-4 py-2 fw-bold shadow-sm rounded-pill">
                                 Pindahkan Stok

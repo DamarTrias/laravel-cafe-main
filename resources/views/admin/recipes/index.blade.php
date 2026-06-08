@@ -6,7 +6,7 @@
 <div class="row align-items-center mb-4">
     <div class="col-md-8">
         <h2 class="fw-bold text-white mb-0 text-primary">Panduan Resep Menu</h2>
-        <p class="text-muted small mb-0">Rincian patokan bahan baku yang digunakan untuk setiap porsi menu.</p>
+        <p class="text-white small mb-0">Rincian patokan bahan baku yang digunakan untuk setiap porsi menu.</p>
     </div>
 </div>
 
@@ -67,7 +67,7 @@
                                                     @endforeach
                                                 </ul>
                                             @else
-                                                <span class="text-muted small">Resep belum ditambahkan oleh Owner.</span>
+                                                <span class="text-white small">Resep belum ditambahkan oleh Owner.</span>
                                             @endif
                                         </td>
                                     </tr>
@@ -81,7 +81,7 @@
         @endif
     @empty
         <div class="col-12 text-center py-5">
-            <h5 class="text-muted">Tidak ada kategori menu.</h5>
+            <h5 class="text-white">Tidak ada kategori menu.</h5>
         </div>
     @endforelse
 </div>
