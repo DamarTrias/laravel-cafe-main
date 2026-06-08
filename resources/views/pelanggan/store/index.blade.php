@@ -15,7 +15,7 @@
                 <button class="btn btn-primary rounded-pill px-4 me-1 py-1 my-1" type="submit">Cari</button>
             </div>
             @if(request('search'))
-                <div class="mt-3"><a href="{{ $baseUrl }}" class="text-muted text-decoration-none small"><i class="bi bi-x-circle me-1"></i>Hapus Pencarian: "{{ request('search') }}"</a></div>
+                <div class="mt-3"><a href="{{ $baseUrl }}" class="text-white text-decoration-none small"><i class="bi bi-x-circle me-1"></i>Hapus Pencarian: "{{ request('search') }}"</a></div>
             @endif
         </form>
     </div>
@@ -187,15 +187,15 @@
                         <h2 id="modalName" class="fw-bold text-white mb-1" style="font-size:1.6rem"></h2>
                         <div id="modalStockBadge" class="mb-3"></div>
                         <div class="mb-3">
-                            <span class="text-muted small d-block mb-1" style="text-transform:uppercase;letter-spacing:1px;font-size:.72rem">Harga</span>
+                            <span class="text-white small d-block mb-1" style="text-transform:uppercase;letter-spacing:1px;font-size:.72rem">Harga</span>
                             <span id="modalPrice" class="fw-bold text-white" style="font-size:2rem"></span>
                         </div>
                         <div id="modalDescriptionBlock" class="mb-4">
-                            <span class="text-muted small d-block mb-1" style="text-transform:uppercase;letter-spacing:1px;font-size:.72rem">Deskripsi</span>
+                            <span class="text-white small d-block mb-1" style="text-transform:uppercase;letter-spacing:1px;font-size:.72rem">Deskripsi</span>
                             <p id="modalDescription" class="text-white mb-0" style="font-size:.95rem;line-height:1.6"></p>
                         </div>
                         <div id="modalAddonsBlock" class="mb-4" style="display:none">
-                            <span class="text-muted small d-block mb-2" style="text-transform:uppercase;letter-spacing:1px;font-size:.72rem">Add-on</span>
+                            <span class="text-white small d-block mb-2" style="text-transform:uppercase;letter-spacing:1px;font-size:.72rem">Add-on</span>
                             <div id="modalAddonsList" class="d-grid gap-2"></div>
                         </div>
                         <div id="modalActionBlock"></div>

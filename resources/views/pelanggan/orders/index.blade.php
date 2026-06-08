@@ -6,7 +6,7 @@
 <div class="row mb-4">
     <div class="col-12">
         <h2 class="fw-bold text-white mb-0">Riwayat Pesanan</h2>
-        <p class="text-muted">Pantau status pesanan Anda di sini.</p>
+        <p class="text-white">Pantau status pesanan Anda di sini.</p>
     </div>
 </div>
 

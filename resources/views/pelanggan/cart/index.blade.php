@@ -107,7 +107,7 @@
                     <div class="text-center py-5">
                         <i class="bi bi-cart-x fs-1 text-muted d-block mb-3"></i>
                         <h5 class="text-white">Keranjang belanja Anda kosong.</h5>
-                        <p class="text-muted">Yuk, lihat <a href="{{ route('pelanggan.store') }}" class="text-primary text-decoration-none">katalog menu</a>.</p>
+                        <p class="text-white">Yuk, lihat <a href="{{ route('pelanggan.store') }}" class="text-primary text-decoration-none">katalog menu</a>.</p>
                     </div>
                 @endif
             </div>

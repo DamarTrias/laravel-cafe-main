@@ -5,13 +5,13 @@
 @section('content')
 <div class="row align-items-center mb-4">
     <div class="col-12">
-        <a href="{{ route('pelanggan.orders') }}" class="text-decoration-none text-muted mb-2 d-inline-block">
+        <a href="{{ route('pelanggan.orders') }}" class="text-decoration-none text-white mb-2 d-inline-block">
             <i class="bi bi-arrow-left me-1"></i> Kembali ke Riwayat
         </a>
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
                 <h2 class="fw-bold text-white mb-0">Pesanan #{{ $order->id }}</h2>
-                <div class="text-muted small">Dipesan pada {{ $order->created_at->format('d M Y, H:i') }}</div>
+                <div class="text-white small">Dipesan pada {{ $order->created_at->format('d M Y, H:i') }}</div>
             </div>
             <span id="order-status-badge" class="badge bg-{{ $order->status }} py-2 px-4 fw-bold fs-6 shadow-sm transition-all" style="transition: all 0.5s ease;">
                 {{ ucfirst($order->status) }}
@@ -68,7 +68,7 @@
             </div>
             <div class="card-footer bg-transparent border-top border-light border-opacity-10 p-4">
                 <div class="d-flex justify-content-between align-items-center">
-                    <span class="text-muted fs-5">Total Pembayaran</span>
+                    <span class="text-white fs-5">Total Pembayaran</span>
                     <h3 class="fw-bold text-primary mb-0 shadow-sm">Rp {{ number_format($order->total_price, 0, ',', '.') }}</h3>
                 </div>
             </div>
@@ -84,14 +84,14 @@
             <div class="card-body p-4">
                 <div class="mb-4 d-flex justify-content-between align-items-center">
                     <div>
-                        <p class="text-muted small mb-1">Metode</p>
+                        <p class="text-white small mb-1">Metode</p>
                         <span class="badge bg-primary bg-opacity-25 text-primary border border-primary border-opacity-25 px-3 py-2 fw-bold">
                             {{ $order->payment_method }}
                         </span>
                     </div>
                     @if($order->table_number)
                     <div class="text-end">
-                        <p class="text-muted small mb-1">Meja / Tipe</p>
+                        <p class="text-white small mb-1">Meja / Tipe</p>
                         <span class="text-white fw-bold fs-5"><i class="bi bi-geo-alt me-1 text-primary"></i>{{ $order->table_number }}</span>
                     </div>
                     @endif
@@ -100,7 +100,7 @@
                 @php $isTransfer = in_array($order->payment_method, ['Transfer', 'QRIS']); @endphp
                 @if($isTransfer)
                     <div class="mb-0">
-                        <p class="text-muted small mb-2">Bukti Pembayaran</p>
+                        <p class="text-white small mb-2">Bukti Pembayaran</p>
                         @if($order->proof_of_transfer)
                             <div class="p-2 border border-light border-opacity-25 rounded overflow-hidden shadow-sm bg-dark bg-opacity-50">
                                 <img src="{{ Storage::url($order->proof_of_transfer) }}" class="img-fluid rounded cursor-pointer transition hover-opacity" onclick="window.open(this.src)" title="Klik untuk perbesar">
@@ -128,7 +128,7 @@
                                                 <i class="bi bi-exclamation-circle me-1"></i>{{ $message }}
                                             </div>
                                         @enderror
-                                        <div class="text-muted small mt-2">Format gambar: JPG, JPEG, PNG, GIF, atau WEBP. Maksimal 2 MB.</div>
+                                        <div class="text-white small mt-2">Format gambar: JPG, JPEG, PNG, GIF, atau WEBP. Maksimal 2 MB.</div>
                                     </div>
                                     <button type="submit" class="btn btn-primary btn-sm w-100 fw-bold">
                                         <i class="bi bi-cloud-upload me-1"></i> Upload Bukti

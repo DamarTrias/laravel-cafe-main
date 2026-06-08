@@ -27,7 +27,7 @@
                     <tr>
                         <td class="ps-4">{{ $loop->iteration }}</td>
                         <td class="fw-medium">{{ $category->name }}</td>
-                        <td class="text-muted small">{{ Str::limit($category->description, 50) }}</td>
+                        <td class="text-white small">{{ Str::limit($category->description, 50) }}</td>
                         <td class="text-end pe-4">
                             <a href="{{ route('owner.categories.edit', $category) }}" class="btn btn-sm btn-outline-warning">
                                 <i class="bi bi-pencil"></i>
@@ -43,7 +43,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" class="text-center py-4 text-muted">Belum ada kategori.</td>
+                        <td colspan="4" class="text-center py-4 text-white">Belum ada kategori.</td>
                     </tr>
                     @endforelse
                 </tbody>
